@@ -1,0 +1,4 @@
+﻿  NetworkManager.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(168,41): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(198,18): warning C4101: 'positions': unreferenced local variable
+  UDPServerCLI.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Debug\UDPServerCLI.exe

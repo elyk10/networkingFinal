@@ -1,0 +1,51 @@
+﻿  common.cpp
+  engine.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\network\networkmanager.h(7,1): warning C4005: 'WIN32_LEAN_AND_MEAN': macro redefinition
+C:\Users\Kyle\Documents\fanshawe\networking\final\extern\freeglut\include\GL\freeglut_std.h(58,1): message : see previous definition of 'WIN32_LEAN_AND_MEAN'
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\engine\engine.cpp(81,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  playermovementsystem.cpp
+  rotatesystem.cpp
+  gameworld.cpp
+  player.cpp
+  light.cpp
+  material.cpp
+  model.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(16,38): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(17,38): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(59,31): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(81,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(82,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(83,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(184,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(185,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(186,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(316,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(317,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(318,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(319,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\graphics\model.cpp(320,68): warning C4312: 'type cast': conversion from 'unsigned int' to 'GLvoid *' of greater size
+  render.cpp
+  shader.cpp
+  shaderprogram.cpp
+  texture.cpp
+  transformcomponent.cpp
+  main.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\network\networkmanager.h(7,1): warning C4005: 'WIN32_LEAN_AND_MEAN': macro redefinition
+C:\Users\Kyle\Documents\fanshawe\networking\final\extern\freeglut\include\GL\freeglut_std.h(58,1): message : see previous definition of 'WIN32_LEAN_AND_MEAN'
+  netcomponent.cpp
+  networkmanager.cpp
+  physics.cpp
+  component.cpp
+  entity.cpp
+  Compiling...
+  entitymanager.cpp
+  input.cpp
+  system.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 883 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  UDPClientGFX.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Release\UDPClientGFX.exe
+          1 file(s) copied.
+          1 file(s) copied.
+          1 file(s) copied.

@@ -1,0 +1,38 @@
+syntax = "proto2";
+
+package gameMessages;
+
+
+message vector3 {
+    required double x = 1;
+    required double y = 2;
+    required double z = 3;
+}
+message quaternion {
+    required double x = 1;
+    required double y = 2; 
+    required double z = 3;
+    required double w = 4;
+}
+message Player {
+    required int32 state = 1; // [IS_ACTIVE, IS_CONNECTED, HAS_AMMO]
+    required vector3 position = 2;
+    required vector3 velocity = 3;
+    required quaternion orientation = 4;
+}
+message Bullet {
+    required int32 state = 1; // [ACTIVE]
+    required vector3 position = 2;
+    required vector3 velocity = 3;
+}
+message UserInput {
+    required int32 id = 1;
+    required int32 input = 2; // [FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT, FIRE]
+}
+message GameScene {
+
+    
+    required int32 id = 1;
+    repeated Player players = 2;
+    repeated Bullet bullets = 3;
+}

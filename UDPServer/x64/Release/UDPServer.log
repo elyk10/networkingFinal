@@ -1,0 +1,6 @@
+﻿  main_udp_server.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 4 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  UDPServer.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Release\UDPServer.exe
