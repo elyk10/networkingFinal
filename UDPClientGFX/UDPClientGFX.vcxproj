@@ -151,6 +151,7 @@ copy /Y "$(SolutionDir)extern\assimp\bin\$(Configuration)\assimp-vc130-mt.dll" "
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gameplay\BulletMovementSystem.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="gameplay\playermovementsystem.cpp" />
@@ -176,6 +177,8 @@ copy /Y "$(SolutionDir)extern\assimp\bin\$(Configuration)\assimp-vc130-mt.dll" "
     <ClCompile Include="system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameplay\bulletcontrollercomponent.h" />
+    <ClInclude Include="gameplay\BulletMovementSystem.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="engine\engine.h" />
     <ClInclude Include="gameplay\playercontrollercomponent.h" />

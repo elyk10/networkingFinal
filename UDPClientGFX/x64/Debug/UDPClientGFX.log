@@ -1,4 +1,10 @@
-﻿  UDPClientGFX.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Debug\UDPClientGFX.exe
+﻿  engine.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\network\networkmanager.h(7,1): warning C4005: 'WIN32_LEAN_AND_MEAN': macro redefinition
+C:\Users\Kyle\Documents\fanshawe\networking\final\extern\freeglut\include\GL\freeglut_std.h(58,1): message : see previous definition of 'WIN32_LEAN_AND_MEAN'
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPClientGFX\engine\engine.cpp(85,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  playermovementsystem.cpp
+  Generating Code...
+  UDPClientGFX.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Debug\UDPClientGFX.exe
           1 file(s) copied.
           1 file(s) copied.
           1 file(s) copied.

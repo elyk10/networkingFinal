@@ -16,5 +16,6 @@ public:
 	bool moveLeft = false;
 	bool moveRight = false;
 	bool shoot = false;
+	bool respawn = false;
 };
 gdpNamespaceEnd

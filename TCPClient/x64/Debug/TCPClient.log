@@ -1,0 +1,6 @@
+﻿  main_client.cpp
+C:\Users\Kyle\Documents\fanshawe\networking\final\TCPClient\buffer.h(38,17): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\TCPClient\buffer.h(48,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Kyle\Documents\fanshawe\networking\final\TCPClient\main_client.cpp(90,48): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\TCPClient\main_client.cpp(96,3): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  TCPClient.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Debug\TCPClient.exe

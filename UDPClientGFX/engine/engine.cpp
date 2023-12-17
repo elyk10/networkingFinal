@@ -13,10 +13,14 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include <gameplay/playercontrollercomponent.h>
+#include <gameplay/bulletcontrollercomponent.h> 
 #include <gameplay/rotatecomponent.h>
 
 #include <graphics/meshrenderercomponent.h>
 #include <graphics/transformcomponent.h>
+#include <network/netcomponent.h>
+
+#include <gameplay/BulletMovementSystem.h>
 
 #include <system/entitymanager.h>
 
@@ -97,6 +101,27 @@ void Engine::Update()
 	controller->moveLeft = m_Keys['a'];
 	controller->moveRight = m_Keys['d'];
 	controller->shoot = m_Keys[' '];
+	controller->respawn = m_Keys['r'];
+
+	glm::vec3 direction = glm::vec3(0.f); 
+
+	direction.z += controller->moveLeft ? -1.f : 0.f; 
+	direction.z += controller->moveRight ? 1.f : 0.f; 
+	direction.x += controller->moveForward ? 1.f : 0.f; 
+	direction.x += controller->moveBackward ? -1.f : 0.f; 
+
+	if (controller->shoot)
+	{
+		//printf("hello");
+		Entity* bullet = GetEntityManager().CreateEntity();
+		bullet->AddComponent<MeshRendererComponent>(m_Models[2].Vbo, m_Models[2].NumTriangles, glm::vec3(0.0f, 1.0f, 0.0f));
+		bullet->AddComponent<BulletControllerComponent>();
+		bullet->GetComponent<BulletControllerComponent>()->direction = direction; 
+		bullet->AddComponent<TransformComponent>(m_Player->GetComponent<TransformComponent>()->position, glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+		bullet->AddComponent<NetComponent>(true); 
+		m_NetworkedEntities.push_back(bullet); 
+		//m_Systems.push_back(bullet->GetComponent)
+	}
 	
 	std::vector<Entity*> entities;
 	GetEntityManager().GetEntities(entities);
@@ -268,6 +293,8 @@ void Engine::LoadAssets()
 		entity->AddComponent<TransformComponent>(origin, unscaled, identity);
 		m_NetworkedEntities.push_back(entity);
 	}
+
+	
 
 	//
 	// Camera
