@@ -96,12 +96,25 @@ void Engine::Update()
 
 	// Handle user Input
 	PlayerControllerComponent* controller = m_Player->GetComponent<PlayerControllerComponent>();
-	controller->moveBackward = m_Keys['s'];
-	controller->moveForward = m_Keys['w'];
-	controller->moveLeft = m_Keys['a'];
-	controller->moveRight = m_Keys['d'];
-	controller->shoot = m_Keys[' '];
-	controller->respawn = m_Keys['r'];
+	if (!(m_Player->GetComponent<MeshRendererComponent>()->color.x >= 1.0f && 
+		m_Player->GetComponent<MeshRendererComponent>()->color.y >= 1.0f && 
+		m_Player->GetComponent<MeshRendererComponent>()->color.z >= 1.0f)) 
+	{
+		controller->moveBackward = m_Keys['s'];
+		controller->moveForward = m_Keys['w'];
+		controller->moveLeft = m_Keys['a'];
+		controller->moveRight = m_Keys['d'];
+		controller->shoot = m_Keys[' '];
+		controller->respawn = false;
+	}
+	else
+		controller->respawn = m_Keys['r'];
+
+	if (controller->respawn)
+	{
+		m_Player->GetComponent<MeshRendererComponent>()->color = glm::vec3(1.0f, 0.0f, 0.0f);
+		m_Player->GetComponent<TransformComponent>()->position = glm::vec3(0.0f);
+	}
 
 	glm::vec3 direction = glm::vec3(0.f); 
 
@@ -118,7 +131,7 @@ void Engine::Update()
 		bullet->AddComponent<BulletControllerComponent>();
 		bullet->GetComponent<BulletControllerComponent>()->direction = direction; 
 		bullet->AddComponent<TransformComponent>(m_Player->GetComponent<TransformComponent>()->position, glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-		bullet->AddComponent<NetComponent>(true); 
+		//bullet->AddComponent<NetComponent>(true); 
 		//m_NetworkedEntities.push_back(bullet); 
 		//m_Systems.push_back(bullet->GetComponent)
 	}
@@ -157,6 +170,8 @@ void Engine::Update()
 	m_NetworkManager.SendPlayerPositionToServer(transform->position.x, transform->position.z);
 	m_NetworkManager.Update();
 
+	
+
 	for (int i = 0; i < 4; i++)
 	{
 		TransformComponent* transform = m_NetworkedEntities[i]->GetComponent<TransformComponent>();
@@ -168,7 +183,7 @@ void Engine::Update()
 	{
 		for (int i = 4; i < m_NetworkManager.m_NetworkedPositions.size(); i++)
 		{
-			std::cout << "I: " << i << " ne: " << m_NetworkedEntities.size() << std::endl;
+			//std::cout << "I: " << i << " ne: " << m_NetworkedEntities.size() << std::endl;
 
 			if (m_NetworkedEntities.size() > i)
 			{
@@ -191,6 +206,29 @@ void Engine::Update()
 				//bullet->AddComponent<TransformComponent>(m_Player->GetComponent<TransformComponent>()->position, glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
 				bullet->AddComponent<NetComponent>(true);
 				m_NetworkedEntities.push_back(bullet);
+			}
+		}
+
+		for (int i = 4; i < m_NetworkedEntities.size(); i++)
+		{
+			TransformComponent* transform = nullptr;
+			transform = m_NetworkedEntities[i]->GetComponent<TransformComponent>();
+
+			if (transform != nullptr)
+			{
+				//std::cout << "PlayerPos: " << m_Player->GetComponent<TransformComponent>()->position.x <<
+				//	", " << m_Player->GetComponent<TransformComponent>()->position.z << " BulletPos: " <<
+					//transform->position.x << ", " << transform->position.z << std::endl;
+				if (m_Player->GetComponent<TransformComponent>()->position.x + 1.0 < transform->position.x - 0.5)
+					continue;
+				if (m_Player->GetComponent<TransformComponent>()->position.x - 1.0 > transform->position.x + 0.5)
+					continue;
+				if (m_Player->GetComponent<TransformComponent>()->position.z + 1.0 < transform->position.z - 0.5)
+					continue;
+				if (m_Player->GetComponent<TransformComponent>()->position.z - 1.0 > transform->position.z + 0.5)
+					continue;
+
+				m_Player->GetComponent<MeshRendererComponent>()->color = glm::vec3(1.0f);
 			}
 		}
 	}

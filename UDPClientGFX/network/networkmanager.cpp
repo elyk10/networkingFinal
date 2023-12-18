@@ -195,7 +195,7 @@ namespace net
 		
 		memcpy(&m_NetworkedPositions[0].x, (const void*)&(buffer[8 + (int)amountOfBullets * 8]), sizeof(float));
 		memcpy(&m_NetworkedPositions[0].z, (const void*)&(buffer[12 + (int)amountOfBullets * 8]), sizeof(float));
-		//std::cout << "playerx: " << m_NetworkedPositions[0].x << " playerz: " << m_NetworkedPositions[0].z << std::endl;
+		//std::cout << "playerx: " << (float)m_NetworkedPositions[0].x << " playerz: " << (float)m_NetworkedPositions[0].z << std::endl;
 		if (amountOfPlayers > 1)
 		{
 			memcpy(&m_NetworkedPositions[1].x, (const void*)&(buffer[16 + (int)amountOfBullets * 8]), sizeof(float));

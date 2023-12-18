@@ -1,16 +1,16 @@
 ﻿  NetworkManager.cpp
 C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(169,41): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(230,44): warning C4244: 'argument': conversion from 'unsigned __int64' to '_Ty', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(231,45): warning C4244: 'argument': conversion from 'unsigned __int64' to '_Ty', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(234,54): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(238,21): warning C4244: 'argument': conversion from 'int' to '_Ty', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(236,56): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(240,22): warning C4244: 'argument': conversion from 'int' to '_Ty', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(265,102): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(271,102): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\Kyle\Documents\fanshawe\networking\final\UDPServerCLI\NetworkManager.cpp(223,8): warning C4101: 'data': unreferenced local variable
   UDPServerCLI.vcxproj -> C:\Users\Kyle\Documents\fanshawe\networking\final\x64\Debug\UDPServerCLI.exe

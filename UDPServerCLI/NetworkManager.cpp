@@ -224,44 +224,50 @@ namespace net
 
 
 		//PlayerPosition positions[4];
-
-		std::vector<float> message;
-		//message.push_back(m_ConnectedClients[0].bullets.size())
-		message.push_back(m_ConnectedClients.size());
-		int bulletAmount = 0;
-		for (int i = 0; i < m_ConnectedClients.size(); i++)
+		for (int k = 0; k < m_ConnectedClients.size(); k++)
 		{
-			bulletAmount += m_ConnectedClients[i].bullets.size();
-		}
-		//std::cout << bulletAmount << " bullets" << std::endl;
-
-		message.push_back(bulletAmount);
-
-		for (int i = 0; i < m_ConnectedClients.size(); i++)
-		{
-			for (int j = 0; j < m_ConnectedClients[i].bullets.size(); j++)
+			std::vector<float> message;
+			//message.push_back(m_ConnectedClients[0].bullets.size())
+			message.push_back(m_ConnectedClients.size());
+			int bulletAmount = 0;
+			for (int i = 0; i < m_ConnectedClients.size(); i++)
 			{
-				message.push_back(m_ConnectedClients[i].bullets[j].x); 
-				message.push_back(m_ConnectedClients[i].bullets[j].z);
+				if (k != i)
+					bulletAmount += m_ConnectedClients[i].bullets.size();
 			}
-		}
+			//std::cout << bulletAmount << " bullets" << std::endl;
 
-		for (int i = 0; i < m_ConnectedClients.size(); i++)
-		{
-			//memcpy(&data[i * sizeof(PlayerPosition)], &m_ConnectedClients[i].x, sizeof(float));
-			//memcpy(&data[i * sizeof(PlayerPosition) + sizeof(float)], &m_ConnectedClients[i].z, sizeof(float));
+			message.push_back(bulletAmount);
 
-			message.push_back(m_ConnectedClients[i].x); 
-			message.push_back(m_ConnectedClients[i].z);
+			for (int i = 0; i < m_ConnectedClients.size(); i++)
+			{
+				if (k != i)
+				{
+					for (int j = 0; j < m_ConnectedClients[i].bullets.size(); j++)
+					{
+						message.push_back(m_ConnectedClients[i].bullets[j].x);
+						message.push_back(m_ConnectedClients[i].bullets[j].z);
+					}
+				}
+			}
 
-			//std::cout << "client: " << i << " x: " << message[2 + bulletAmount * 2 + i * 2] << " z: " << message[3 + bulletAmount * 2 + i * 2] << std::endl;
+			for (int i = 0; i < m_ConnectedClients.size(); i++)
+			{
+				//memcpy(&data[i * sizeof(PlayerPosition)], &m_ConnectedClients[i].x, sizeof(float));
+				//memcpy(&data[i * sizeof(PlayerPosition) + sizeof(float)], &m_ConnectedClients[i].z, sizeof(float));
+				if (k != i)
+				{
+					message.push_back(m_ConnectedClients[i].x);
+					message.push_back(m_ConnectedClients[i].z);
+				}
 
-		}
+				//std::cout << "client: " << i << " x: " << message[2 + bulletAmount * 2 + i * 2] << " z: " << message[3 + bulletAmount * 2 + i * 2] << std::endl;
 
-		// Write
-		for (int i = 0; i < m_ConnectedClients.size(); i++)
-		{
-			ClientInfo& client = m_ConnectedClients[i];
+			}
+
+			// Write
+
+			ClientInfo& client = m_ConnectedClients[k]; 
 			int result = sendto(m_ListenSocket, reinterpret_cast<const char*>(message.data()), message.size() * sizeof(float), 0, (SOCKADDR*)&client.addr, client.addrLen);
 			if (result == SOCKET_ERROR) {
 				// TODO: We want to handle this differently.
