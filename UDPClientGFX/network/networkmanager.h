@@ -29,6 +29,11 @@ namespace net
 		float z;
 	};
 
+	struct BulletPositions
+	{
+		std::vector<PlayerPosition> bullets;
+	};
+
 	struct ClientInfo
 	{
 		sockaddr_in addr;
@@ -47,6 +52,7 @@ namespace net
 		void Update();
 
 		void SendPlayerPositionToServer(float x, float z);
+		void SendBulletPositionsToServer(std::vector<float> x, std::vector<float> z); 
 
 		// 
 		// Positions of players
@@ -66,6 +72,7 @@ namespace net
 
 
 		PlayerPosition m_PlayerPosition;
+		std::vector<PlayerPosition> m_BulletPositions;
 
 		// 
 		// Time

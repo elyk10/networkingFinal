@@ -29,6 +29,7 @@ namespace net
 	{
 		sockaddr_in addr;
 		int addrLen;
+		std::vector<PlayerPosition> bullets;
 	};
 
 	class NetworkManager

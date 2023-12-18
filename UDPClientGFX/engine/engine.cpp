@@ -119,7 +119,7 @@ void Engine::Update()
 		bullet->GetComponent<BulletControllerComponent>()->direction = direction; 
 		bullet->AddComponent<TransformComponent>(m_Player->GetComponent<TransformComponent>()->position, glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
 		bullet->AddComponent<NetComponent>(true); 
-		m_NetworkedEntities.push_back(bullet); 
+		//m_NetworkedEntities.push_back(bullet); 
 		//m_Systems.push_back(bullet->GetComponent)
 	}
 	
@@ -131,8 +131,29 @@ void Engine::Update()
 		m_Systems[i]->Execute(entities, dt.count());
 	}
 
-	TransformComponent* transform = m_Player->GetComponent<TransformComponent>();
+	std::vector<float>x, z;
 
+	for (int i = 0; i < entities.size(); i++)
+	{
+		Entity* entity = entities[i]; 
+		
+		BulletControllerComponent* bulletController = nullptr;
+		TransformComponent* transform = nullptr;
+
+		bulletController = entity->GetComponent<BulletControllerComponent>();
+		transform = entity->GetComponent<TransformComponent>();
+
+		if (bulletController != nullptr && transform != nullptr)
+		{
+			x.push_back(transform->position.x); 
+			z.push_back(transform->position.z); 
+		}
+
+	}
+
+	TransformComponent* transform = m_Player->GetComponent<TransformComponent>(); 
+
+	m_NetworkManager.SendBulletPositionsToServer(x, z);
 	m_NetworkManager.SendPlayerPositionToServer(transform->position.x, transform->position.z);
 	m_NetworkManager.Update();
 

@@ -1,6 +1,7 @@
 #include "NetworkManager.h"
 
 #include <memory>
+#include <iostream>
 
 #define SERVER_PORT 8412
 #define SERVER_IP "127.0.0.1"
@@ -121,7 +122,7 @@ namespace net
 		sockaddr_in addr;
 		int addrLen = sizeof(addr);
 
-		const int bufLen = 8;	// recving 2 floats only
+		const int bufLen = 4096;	// recving 2 floats only
 		char buffer[bufLen];
 		int result = recvfrom(m_ListenSocket, buffer, bufLen, 0, (SOCKADDR*)&addr, &addrLen);
 		if (result == SOCKET_ERROR) {
@@ -169,11 +170,38 @@ namespace net
 		}
 
 		ClientInfo& client = m_ConnectedClients[clientId];
-		
-		memcpy(&client.x, (const void*)&(buffer[0]), sizeof(float));
-		memcpy(&client.z, (const void*)&(buffer[4]), sizeof(float));
 
-		printf("From: %s:%d: {%.2f, %.2f}\n", inet_ntoa(client.addr.sin_addr), client.addr.sin_port, client.x, client.z);
+
+		float amountOfBullets;
+		memcpy(&amountOfBullets, (const void*)&(buffer[0]), sizeof(float));
+		//std::cout << "num of bullets with client: " << client.bullets.size() << std::endl;
+		
+		for (int i = 0; i < amountOfBullets; i ++)
+		{
+			PlayerPosition bullet; 
+			memcpy(&bullet.x, (const void*)&(buffer[(i * 8) + 4]), sizeof(float)); 
+			memcpy(&bullet.z, (const void*)&(buffer[(i * 8) + 8]), sizeof(float)); 
+			//std::cout << "bullet number: " << i << " bulletx: " << bullet.x << " bulletz: " << bullet.z << std::endl;
+			
+			if (i < client.bullets.size())
+			{
+				//memcpy(&client.bullets[(i - 4) / 4].x, (const void*)&(buffer[i]), sizeof(float));
+				//memcpy(&client.bullets[(i - 4) / 4].z, (const void*)&(buffer[i+4]), sizeof(float));
+				client.bullets[i].x = bullet.x; 
+				client.bullets[i].z = bullet.z; 
+			}
+			else
+			{
+				client.bullets.push_back(bullet);
+			}
+		}
+		
+		memcpy(&client.x, (const void*)&(buffer[(int)amountOfBullets * 8 + 4]), sizeof(float));
+		memcpy(&client.z, (const void*)&(buffer[(int)amountOfBullets * 8 + 8]), sizeof(float)); 
+
+		//std::cout << "playerx: " << client.x << " playerz: " << client.z << std::endl;
+
+		//printf("From: %s:%d: {%.2f, %.2f}\n", inet_ntoa(client.addr.sin_addr), client.addr.sin_port, client.x, client.z);
 	}
 
 	void NetworkManager::BroadcastUpdatesToClients()
@@ -184,30 +212,57 @@ namespace net
 			return;
 		}
 
-		printf("broadcast!\n");
+		//printf("broadcast!\n");
 
 		m_NextBroadcastTime = currentTime + std::chrono::milliseconds(200);
 
 		// Add 20 ms to the next broadcast time from now()
 		//m_NextBroadcastTime 
 
-		const int length = sizeof(PlayerPosition) * 4;
+		const int length = 4096;//sizeof(PlayerPosition) * 4;
 		char data[length];
 
 
-		PlayerPosition positions[4];
+		//PlayerPosition positions[4];
+
+		std::vector<float> message;
+		//message.push_back(m_ConnectedClients[0].bullets.size())
+		message.push_back(m_ConnectedClients.size());
+		int bulletAmount = 0;
+		for (int i = 0; i < m_ConnectedClients.size(); i++)
+		{
+			bulletAmount += m_ConnectedClients[i].bullets.size();
+		}
+		//std::cout << bulletAmount << " bullets" << std::endl;
+
+		message.push_back(bulletAmount);
 
 		for (int i = 0; i < m_ConnectedClients.size(); i++)
 		{
-			memcpy(&data[i * sizeof(PlayerPosition)], &m_ConnectedClients[i].x, sizeof(float));
-			memcpy(&data[i * sizeof(PlayerPosition) + sizeof(float)], &m_ConnectedClients[i].z, sizeof(float));
+			for (int j = 0; j < m_ConnectedClients[i].bullets.size(); j++)
+			{
+				message.push_back(m_ConnectedClients[i].bullets[j].x); 
+				message.push_back(m_ConnectedClients[i].bullets[j].z);
+			}
+		}
+
+		for (int i = 0; i < m_ConnectedClients.size(); i++)
+		{
+			//memcpy(&data[i * sizeof(PlayerPosition)], &m_ConnectedClients[i].x, sizeof(float));
+			//memcpy(&data[i * sizeof(PlayerPosition) + sizeof(float)], &m_ConnectedClients[i].z, sizeof(float));
+
+			message.push_back(m_ConnectedClients[i].x); 
+			message.push_back(m_ConnectedClients[i].z);
+
+			//std::cout << "client: " << i << " x: " << message[2 + bulletAmount * 2 + i * 2] << " z: " << message[3 + bulletAmount * 2 + i * 2] << std::endl;
+
 		}
 
 		// Write
 		for (int i = 0; i < m_ConnectedClients.size(); i++)
 		{
 			ClientInfo& client = m_ConnectedClients[i];
-			int result = sendto(m_ListenSocket, &data[0], length, 0, (SOCKADDR*)&client.addr, client.addrLen);
+			int result = sendto(m_ListenSocket, reinterpret_cast<const char*>(message.data()), message.size() * sizeof(float), 0, (SOCKADDR*)&client.addr, client.addrLen);
 			if (result == SOCKET_ERROR) {
 				// TODO: We want to handle this differently.
 				printf("send failed with error %d\n", WSAGetLastError());

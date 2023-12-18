@@ -112,10 +112,31 @@ namespace net
 		m_PlayerPosition.z = z;
 	}
 
+	void NetworkManager::SendBulletPositionsToServer(std::vector<float> x, std::vector<float> z)
+	{
+		for (int i = 0; i < m_BulletPositions.size(); i++)
+		{
+			m_BulletPositions[i].x = x[i];
+			m_BulletPositions[i].z = z[i];
+
+		}
+
+		if (m_BulletPositions.size() < x.size())
+		{
+			for (int i = m_BulletPositions.size(); i < x.size(); i++)
+			{
+				PlayerPosition temp;
+				temp.x = x[i];
+				temp.z = z[i];
+				m_BulletPositions.push_back(temp);
+			}
+		}
+	}
+
 	void NetworkManager::HandleRECV()
 	{
 		// Read
-		const int bufLen = sizeof(float) * 2 * NUM_PLAYERS;
+		const int bufLen = 4096;//sizeof(float) * 2 * NUM_PLAYERS;
 		char buffer[bufLen];
 		int result = recvfrom(m_ServerSocket, buffer, bufLen, 0, (SOCKADDR*)&m_ServerAddr, &m_ServerAddrLen);
 		if (result == SOCKET_ERROR) {
@@ -132,15 +153,64 @@ namespace net
 			return;
 		}
 
+		float amountOfPlayers;
+		float amountOfBullets;
+		memcpy(&amountOfPlayers, (const void*)&(buffer[0]), sizeof(float)); 
+		memcpy(&amountOfBullets, (const void*)&(buffer[4]), sizeof(float));
+		//std::cout << "fromserver: " << amountOfBullets << std::endl;
 
-		memcpy(&m_NetworkedPositions[0].x, (const void*)&(buffer[0]), sizeof(float));
-		memcpy(&m_NetworkedPositions[0].z, (const void*)&(buffer[4]), sizeof(float));
-		memcpy(&m_NetworkedPositions[1].x, (const void*)&(buffer[8]), sizeof(float));
-		memcpy(&m_NetworkedPositions[1].z, (const void*)&(buffer[12]), sizeof(float));
-		memcpy(&m_NetworkedPositions[2].x, (const void*)&(buffer[16]), sizeof(float));
-		memcpy(&m_NetworkedPositions[2].z, (const void*)&(buffer[20]), sizeof(float));
-		memcpy(&m_NetworkedPositions[3].x, (const void*)&(buffer[24]), sizeof(float));
-		memcpy(&m_NetworkedPositions[3].z, (const void*)&(buffer[28]), sizeof(float));
+		for (int i = 0; i < amountOfBullets; i ++)
+		{
+			PlayerPosition bullet; 
+			memcpy(&bullet.x, (const void*)&(buffer[8 + i * 8]), sizeof(float));
+			memcpy(&bullet.z, (const void*)&(buffer[12 + i * 8]), sizeof(float)); 
+			 
+			if (i < m_NetworkedPositions.size() - 4)
+			{
+				/*memcpy(&m_NetworkedPositions[4 + i].x, (const void*)&(buffer[8 + i * 8]), sizeof(float));
+				memcpy(&m_NetworkedPositions[4 + i].z, (const void*)&(buffer[12 + i * 8]), sizeof(float));*/
+
+				m_NetworkedPositions[4 + i].x = bullet.x;
+				m_NetworkedPositions[4 + i].z = bullet.z;
+
+			}
+			else
+			{
+				m_NetworkedPositions.push_back(bullet);
+			}
+
+			std::cout << "bulletx: " << bullet.x << " bulletz: " << bullet.z << std::endl;
+
+		}
+
+		/*for (int i = 0; i < 4; i++)
+		{
+			memcpy(&m_NetworkedPositions[i].x, (const void*)&(buffer[4 + (int)amountOfBullets * 8]), sizeof(float));
+			memcpy(&m_NetworkedPositions[i].z, (const void*)&(buffer[8 + (int)amountOfBullets * 8]), sizeof(float)); 
+
+		}*/
+
+		//std::cout << "number of players: " << amountOfPlayers << std::endl;
+
+		
+		memcpy(&m_NetworkedPositions[0].x, (const void*)&(buffer[8 + (int)amountOfBullets * 8]), sizeof(float));
+		memcpy(&m_NetworkedPositions[0].z, (const void*)&(buffer[12 + (int)amountOfBullets * 8]), sizeof(float));
+		//std::cout << "playerx: " << m_NetworkedPositions[0].x << " playerz: " << m_NetworkedPositions[0].z << std::endl;
+		if (amountOfPlayers > 1)
+		{
+			memcpy(&m_NetworkedPositions[1].x, (const void*)&(buffer[16 + (int)amountOfBullets * 8]), sizeof(float));
+			memcpy(&m_NetworkedPositions[1].z, (const void*)&(buffer[20 + (int)amountOfBullets * 8]), sizeof(float));
+		}
+		if (amountOfPlayers > 2)
+		{
+			memcpy(&m_NetworkedPositions[2].x, (const void*)&(buffer[24 + (int)amountOfBullets * 8]), sizeof(float));
+			memcpy(&m_NetworkedPositions[2].z, (const void*)&(buffer[28 + (int)amountOfBullets * 8]), sizeof(float));
+		}
+		if (amountOfPlayers > 3)
+		{
+			memcpy(&m_NetworkedPositions[3].x, (const void*)&(buffer[32 + (int)amountOfBullets * 8]), sizeof(float));
+			memcpy(&m_NetworkedPositions[3].z, (const void*)&(buffer[36 + (int)amountOfBullets * 8]), sizeof(float));
+		}
 	}
 
 	void NetworkManager::SendDataToServer()
@@ -151,16 +221,30 @@ namespace net
 			return;
 		}
 
-		m_NextSendTime = currentTime + std::chrono::milliseconds(50);
+		m_NextSendTime = currentTime + std::chrono::milliseconds(200);
 		
 		// Add 20 ms to the next broadcast time from now()
 		//m_NextBroadcastTime 
+		//float* message = new float[1 /* number of bullets */ + m_BulletPositions.size() + 2/* player position */];
+		std::vector<float> message;
+		message.push_back(m_BulletPositions.size());
+		for (int i = 0; i < m_BulletPositions.size(); i++)
+		{
+			message.push_back(m_BulletPositions[i].x);
+			message.push_back(m_BulletPositions[i].z);
 
-
+			//std::cout << " x: " << message[1 + i * 2] << " z: " << message[2 + i * 2] << std::endl;
+		}
+		//std::cout << "numofbullets: " << message[0] << std::endl;
+		//std::cout << "previous x: " << m_PlayerPosition.x << " z: " << m_PlayerPosition.z << std::endl; 
+		message.push_back(m_PlayerPosition.x); 
+		message.push_back(m_PlayerPosition.z); 
+		//std::cout << "playerx: " << message[m_BulletPositions.size() * 2 + 1] << "playerz: " << message[m_BulletPositions.size() * 2 + 2] << std::endl;
+		//message[0] = 
 		// MessageQueue, loop through and send all messages
 		// You may multiple servers, you are sending data to
-		int result = sendto(m_ServerSocket, (const char*)&m_PlayerPosition, 
-			sizeof(m_PlayerPosition), 0, (SOCKADDR*)&m_ServerAddr, m_ServerAddrLen);
+		int result = sendto(m_ServerSocket, reinterpret_cast<const char*>(message.data()), //(const char*)&m_PlayerPosition, 
+			message.size() * sizeof(float), 0, (SOCKADDR*)&m_ServerAddr, m_ServerAddrLen); 
 		if (result == SOCKET_ERROR) {
 			// TODO: We want to handle this differently.
 			printf("send failed with error %d\n", WSAGetLastError());
