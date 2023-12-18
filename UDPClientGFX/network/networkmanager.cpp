@@ -179,7 +179,7 @@ namespace net
 				m_NetworkedPositions.push_back(bullet);
 			}
 
-			std::cout << "bulletx: " << bullet.x << " bulletz: " << bullet.z << std::endl;
+			//std::cout << "bulletx: " << bullet.x << " bulletz: " << bullet.z << std::endl;
 
 		}
 

@@ -163,6 +163,37 @@ void Engine::Update()
 		transform->position.x = m_NetworkManager.m_NetworkedPositions[i].x;
 		transform->position.z = m_NetworkManager.m_NetworkedPositions[i].z;
 	}
+
+	if (m_NetworkManager.m_NetworkedPositions.size() > 4)
+	{
+		for (int i = 4; i < m_NetworkManager.m_NetworkedPositions.size(); i++)
+		{
+			std::cout << "I: " << i << " ne: " << m_NetworkedEntities.size() << std::endl;
+
+			if (m_NetworkedEntities.size() > i)
+			{
+				//printf("hellot");
+				TransformComponent* transform = m_NetworkedEntities[i]->GetComponent<TransformComponent>(); 
+				transform->position.x = m_NetworkManager.m_NetworkedPositions[i].x; 
+				transform->position.z = m_NetworkManager.m_NetworkedPositions[i].z; 
+
+			}
+			else
+			{
+
+				Entity* bullet = GetEntityManager().CreateEntity();
+				bullet->AddComponent<MeshRendererComponent>(m_Models[2].Vbo, m_Models[2].NumTriangles, glm::vec3(0.0f, 0.0f, 1.0f));
+				TransformComponent transform(glm::vec3(m_NetworkManager.m_NetworkedPositions[i].x,
+					0.0f, m_NetworkManager.m_NetworkedPositions[i].z), glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f)); 
+				bullet->AddComponent<TransformComponent>(transform); 
+				//bullet->AddComponent<BulletControllerComponent>();
+				//bullet->GetComponent<BulletControllerComponent>()->direction = direction;
+				//bullet->AddComponent<TransformComponent>(m_Player->GetComponent<TransformComponent>()->position, glm::vec3(0.5f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+				bullet->AddComponent<NetComponent>(true);
+				m_NetworkedEntities.push_back(bullet);
+			}
+		}
+	}
 }
 
 void Engine::Render()
